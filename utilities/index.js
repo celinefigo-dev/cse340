@@ -154,14 +154,26 @@ Util.checkEmployeeOrAdmin = (req, res, next) => {
 /* ****************************************
  *  Check Login
  * ************************************ */
- Util.checkLogin = (req, res, next) => {
-  if (res.locals.loggedIn) {
+ Util.checkJWTToken = (req, res, next) => {
+ if (req.cookies.jwt) {
+  jwt.verify(
+   req.cookies.jwt,
+   process.env.ACCESS_TOKEN_SECRET,
+   function (err, accountData) {
+    if (err) {
+     req.flash("Please log in")
+     res.clearCookie("jwt")
+     return res.redirect("/account/login")
+    }
+    res.locals.accountData = accountData
+    res.locals.loggedin = 1
     next()
-  } else {
-    req.flash("notice", "Please log in.")
-    return res.redirect("/account/login")
+   })
+ } else {
+  next()
+ } res.redirect("/account/login")
   }
- }
+ 
 
 /* ****************************************
  * Middleware For Handling Errors
