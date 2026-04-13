@@ -1,121 +1,89 @@
 /* ******************************************
  * CSE Motors
- * Basic Express setup for EJS views
+ * Express server setup
  *******************************************/
 
 /* ***********************
- * Require Statements
+ * Require Packages
  *************************/
-const express = require("express");
-const expressLayouts = require("express-ejs-layouts");
-const env = require("dotenv").config();
-const app = express();
-const static = require("./routes/static");
-const baseController = require("./controllers/baseController");
-const inventoryRoute = require("./routes/inventoryRoutes");
-const appointmentRoute = require("./routes/appointmentRoute");
-const utilities = require("./utilities/index");
-const session = require("express-session");
-const pool = require("./database/");
-const accountRoute = require("./routes/accountRoute");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+const express = require("express")
+const expressLayouts = require("express-ejs-layouts")
+const path = require("path")
+const dotenv = require("dotenv")
 
 /* ***********************
- * View Engines and Templates
+ * Load Environment Variables
  *************************/
-app.set("view engine", "ejs");
-app.use(expressLayouts);
-app.set("layout", "./layouts/layout");
-app.set("views", "./views");
+dotenv.config()
+
+/* ***********************
+ * Create App
+ *************************/
+const app = express()
+
+/* ***********************
+ * App Settings
+ *************************/
+const port = process.env.PORT || 5500
+const host = process.env.HOST || "localhost"
+
+/* ***********************
+ * View Engine
+ *************************/
+app.set("view engine", "ejs")
+app.set("views", path.join(__dirname, "views"))
+app.use(expressLayouts)
+app.set("layout", "./layouts/layout")
 
 /* ***********************
  * Middleware
- * ************************/
-app.use(
-  session({
-    store: new (require("connect-pg-simple")(session))({
-      createTableIfMissing: true,
-      pool,
-    }),
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-    name: "sessionId",
-  })
-);
+ *************************/
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(express.static(path.join(__dirname, "public")))
 
-// For cookie
-app.use(cookieParser());
-
-// Express Messages Middleware
-app.use(require("connect-flash")());
-app.use(function (req, res, next) {
-  res.locals.messages = require("express-messages")(req, res);
-  next();
-});
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-
-app.use(utilities.checkJWTToken);
+/* ***********************
+ * Prevent EJS messages error
+ *************************/
+app.use((req, res, next) => {
+  res.locals.messages = () => ""
+  next()
+})
 
 /* ***********************
  * Routes
  *************************/
-app.use(static);
-
-// Index route
-app.get("/", utilities.handleErrors(baseController.buildHome));
-
-// Inventory Route
-app.use("/inv", inventoryRoute);
-
-// Account Route
-app.use("/account", accountRoute);
-
-//Appointment Route
-app.use("/appointments", appointmentRoute);
-
-// File Not Found Route - must be last route in list
-app.use(async (req, res, next) => {
-  next({
-    status: 404,
-    message: "Sorry, you must have been in the wrong direction.",
-  });
-});
-
-app.use("/test", inventoryRoute);
+app.get("/", (req, res) => {
+  res.render("index", {
+    title: "Home | CSE Motors",
+  })
+})
 
 /* ***********************
- * Local Server Information
- * Values from .env (environment) file
+ * 404 Handler
  *************************/
-const port = process.env.PORT;
-const host = process.env.HOST;
+app.use((req, res) => {
+  res.status(404).render("404", {
+    title: "404 | Page Not Found",
+    message: "Sorry, the page you are looking for does not exist.",
+  })
+})
 
 /* ***********************
- * Express Error Handler
- * Place after all other middleware
+ * Error Handler
  *************************/
-app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav();
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-  if (err.status == 404) {
-    message = err.message;
-  } else {
-    message = "Oh no! There was a crash. Maybe try a different route?";
-  }
+app.use((err, req, res, next) => {
+  console.error(`Error at "${req.originalUrl}": ${err.message}`)
+
   res.status(err.status || 500).render("errors/error", {
-    title: err.status || "Server Error",
-    message,
-    nav,
-  });
-});
+    title: "Server Error",
+    message: err.message || "Something went wrong.",
+  })
+})
 
 /* ***********************
- * Log statement to confirm server operation
+ * Start Server
  *************************/
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`);
-});
+  console.log(`✅ Server running at http://${host}:${port}`)
+})

@@ -1,0 +1,88 @@
+<h1>Book an Appointment</h1>
+<form action="/appointments/book" method="POST" class="form">
+    <div class="form-group">
+        <label for="booking_date">Date</label>
+        <input type="date" name="date" id="date" required class="form-input" />
+    </div>
+
+    <div class="form-group">
+        <label for="booking_time">Time</label>
+        <input type="time" name="time" id="time" class="form-input" />
+    </div>
+
+    <div class="form-group">
+        <label for="booking_purpose">Purpose</label>
+        <textarea name="purpose" id="purpose" required class="form-input"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book</button>
+</form>
+
+<!-- Modal for success message -->
+<div id="successModal" class="modal" style="display: none">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Success!</h2>
+        <p>Appointment booked successfully!</p>
+    </div>
+</div>
+
+<script>
+  // Show modal if success is true
+  <% if (success) { %>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('successModal').style.display = 'block';
+        });
+  <% } %>
+
+        // Close modal when clicking the close button
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelector('.close').onclick = function () {
+                document.getElementById('successModal').style.display = 'none';
+            };
+
+            // Close modal when clicking outside
+            window.onclick = function (event) {
+                if (event.target == document.getElementById('successModal')) {
+                    document.getElementById('successModal').style.display = 'none';
+                }
+            };
+        });
+</script>
+
+<style>
+    .modal {
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>

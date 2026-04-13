@@ -1,4 +1,5 @@
-app.use((err, req, res, next) => {
-    console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-    res.status(err.status || 500).send(err.message)
-})
+<% if(title) { %>
+    <h1 class="error-title"><%- title %></h1>
+    <% } else { res.redirect('/') } %>
+
+        <p class="error-message"><%- message %></p>
