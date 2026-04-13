@@ -3,9 +3,10 @@
         <h2>
             <%= car.name %> Upgrades
         </h2>
+
         <div class="upgrade-grid">
-            <% car.upgrades.forEach(upgrade=> { %>
-                <%- include('upgrade-card', { upgrade }) %>
+            <% car.upgrades.forEach((upgrade)=> { %>
+                <%- include('partials/upgrade-card', { upgrade: upgrade }) %>
                     <% }) %>
         </div>
     </div>
@@ -14,9 +15,10 @@
         <h2>
             <%= car.name %> Reviews
         </h2>
+
         <ul class="review-list">
-            <% car.reviews.forEach(review=> { %>
-                <%- include('upgrade-list-item', { review }) %>
+            <% car.reviews.forEach((review)=> { %>
+                <%- include('partials/upgrade-list-item', { review: review }) %>
                     <% }) %>
         </ul>
     </div>
