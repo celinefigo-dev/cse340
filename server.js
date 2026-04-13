@@ -1,5 +1,5 @@
 /* ******************************************
- * CSE Motors - Assignment 1 Server
+ * CSE Motors 
  * Basic Express setup for EJS views
  *******************************************/
 
