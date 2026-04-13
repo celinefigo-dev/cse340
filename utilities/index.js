@@ -1,17 +1,16 @@
 const invModel = require("../models/inventory-model")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
-
 const Util = {}
-
 /* ************************
  * Constructs the nav HTML unordered list
  ************************** */
-Util.getNav = async function () {
-  const data = await invModel.getClassifications()
-  let list = "<ul>"
-  list += '<li><a href="/" title="Home Page">Home</a></li>'
-
+Util.getNav = async function (req, res, next) {
+  let data = await invModel.getClassifications()
+  console.log(data)
+  let list = '<ul class="navegation">'
+  list += '<li><a href="/" title="Home page">Home</a></li>'
+  // Route to build inventory by classification view
   data.rows.forEach((row) => {
     list += "<li>"
     list +=
@@ -24,165 +23,228 @@ Util.getNav = async function () {
       "</a>"
     list += "</li>"
   })
-
   list += "</ul>"
   return list
 }
 
-/* **************************************
- * Build the classification view HTML
- * ************************************ */
-Util.buildClassificationGrid = async function (data) {
-  let grid = ""
 
+/* **************************************
+* Build the classification view HTML
+* ************************************ */
+Util.buildClassificationGrid = async function (data) {
+  let grid
   if (data.length > 0) {
     grid = '<ul id="inv-display">'
-    data.forEach((vehicle) => {
-      grid += "<li>"
-      grid +=
-        '<a href="../../inv/detail/' +
-        vehicle.inv_id +
-        '" title="View ' +
-        vehicle.inv_make +
-        " " +
-        vehicle.inv_model +
-        ' details">' +
-        '<img src="' +
-        vehicle.inv_thumbnail +
-        '" alt="Image of ' +
-        vehicle.inv_make +
-        " " +
-        vehicle.inv_model +
-        ' on CSE Motors" /></a>'
+    data.forEach(vehicle => {
+      grid += '<li>'
+      grid += '<a href="../../inv/detail/' + vehicle.inv_id
+        + '" title="View ' + vehicle.inv_make + ' ' + vehicle.inv_model
+        + 'details"><img src="' + vehicle.inv_image
+        + '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model
+        + ' on CSE Motors" /></a>'
       grid += '<div class="namePrice">'
-      grid += "<hr />"
-      grid += "<h2>"
-      grid +=
-        '<a href="../../inv/detail/' +
-        vehicle.inv_id +
-        '" title="View ' +
-        vehicle.inv_make +
-        " " +
-        vehicle.inv_model +
-        ' details">' +
-        vehicle.inv_make +
-        " " +
-        vehicle.inv_model +
-        "</a>"
-      grid += "</h2>"
-      grid +=
-        "<span>$" +
-        new Intl.NumberFormat("en-US").format(vehicle.inv_price) +
-        "</span>"
-      grid += "</div>"
-      grid += "</li>"
+      grid += '<hr />'
+      grid += '<h2>'
+      grid += '<a href="../../inv/detail/' + vehicle.inv_id + '" title="View '
+        + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">'
+        + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
+      grid += '</h2>'
+      grid += '<span>$'
+        + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
+      grid += '</div>'
+      grid += '</li>'
     })
-    grid += "</ul>"
+    grid += '</ul>'
   } else {
-    grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
-
   return grid
 }
 
-/* **************************************
- * Build the details view HTML
- * ************************************ */
-Util.buildDetailsGrid = function (v) {
-  const details = `
-  <section class="detail-card">
-    <img src="${v.inv_image}" alt="Image of ${v.inv_make} ${v.inv_model}" loading="lazy">
-    <div class="info">
-      <h3>${v.inv_make} ${v.inv_model} Details</h3>
-      <ul class="paragraph">
-        <li><strong>Price:</strong> $${Number(v.inv_price).toLocaleString("en-US")}</li>
-        <li><strong>Description:</strong> ${v.inv_description}</li>
-        <li><strong>Color:</strong> ${v.inv_color}</li>
-        <li><strong>Miles:</strong> ${Number(v.inv_miles).toLocaleString("en-US")}</li>
-      </ul>
-    </div>
-  </section>`
-  return details
-}
 
 /* **************************************
- * Build classification list
- * ************************************ */
-Util.buildClassificationList = async function (selected_id = null) {
-  try {
-    const data = await invModel.getClassifications()
+* Build the details view HTML
+* ************************************ */
+Util.buildDetailsView = async function (res, data) {
 
-    let classificationList =
-      '<select name="classification_id" id="classificationList" required>'
-    classificationList += "<option value=''>Choose a Classification</option>"
-
-    data.rows.forEach((row) => {
-      classificationList += `<option value="${row.classification_id}"`
-      if (selected_id && Number(row.classification_id) === Number(selected_id)) {
-        classificationList += " selected"
+  let grid = '';
+  if (data.length > 0) {
+    data.forEach(vehicle => {
+      grid = '<div class="detailsView">'
+      grid += '<img src="' + vehicle.inv_image + '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model + ' on CSE Motors" />'
+      grid += '<div class="details">'
+      grid += '<h3>' + vehicle.inv_make + ' ' + vehicle.inv_model + '</h3>'
+      grid += '<h4>Price:$' + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</h4>';
+      grid += '<strong>Description: </strong>';
+      grid += '<span>' + vehicle.inv_description + '</span>';
+      grid += '<br />'
+      grid += '<br />'
+      grid += '<strong>Color: </strong>';
+      grid += '<span> ' + vehicle.inv_color + ' </span>'
+      grid += '<br />'
+      grid += '<br />'
+      grid += '<strong>Miles: </strong>';
+      grid += '<span> ' + new Intl.NumberFormat('en-US').format(vehicle.inv_miles) + '</span>'
+      grid += '<br />'
+      grid += '<br />'
+      grid += '<br />'
+      grid += '<br />'
+      if (res.locals.loggedin && res.locals.accountData.account_type == 'Client') {
+        grid += `<form action="/account/favorites/add/${vehicle.inv_id}" method="POST" class="favorites-form">`
+        grid += '<button type="submit" class="remove-btn">Add Favorites</button>'
+        grid += '</form>'
+      } else {
+        grid += '';
       }
-      classificationList += `>${row.classification_name}</option>`
     })
-
-    classificationList += "</select>"
-    return classificationList
-  } catch (err) {
-    console.error("Error building classification list:", err.message)
-    return "<select><option value=''>Error loading classifications</option></select>"
+  } else {
+    grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
+  return grid
 }
+
+
+/* **************************************
+* Build the vehicle Management view HTML
+* ************************************ */
+Util.buildVehicleManagementView = async function (data) {
+  let grid
+  grid = '<ul id="vehicle-management">'
+  grid += '<li>'
+  grid += '<a href="/inv/add-classification" title="Add a new classification">' + 'Add New Classification' + '</a>'
+  grid += '</li>'
+  grid += '<li>'
+  grid += '<a href="/inv/add-vehicle" title="Add a new vehicle">' + 'Add New Vehicle' + '</a>'
+  grid += '</li>'
+  grid += '</ul>'
+  return grid
+}
+
+
+/* **************************************
+* Build the Classification List dropdown
+* ************************************ */
+Util.buildClassificationList = async function (classification_id = null) {
+  let data = await invModel.getClassifications()
+  let classificationList =
+    '<select name="classification_id" id="classificationList" required>'
+  classificationList += "<option value=''>Choose a Classification</option>"
+  data.rows.forEach((row) => {
+    classificationList += '<option value="' + row.classification_id + '"'
+    if (
+      classification_id != null &&
+      row.classification_id == classification_id
+    ) {
+      classificationList += " selected "
+    }
+    classificationList += ">" + row.classification_name + "</option>"
+  })
+  classificationList += "</select>"
+  return classificationList
+}
+
+
 
 /* ****************************************
- * Middleware to check token validity
- **************************************** */
+* Middleware to check token validity
+**************************************** */
 Util.checkJWTToken = (req, res, next) => {
-  if (req.cookies && req.cookies.jwt) {
+  if (req.cookies.jwt) {
     jwt.verify(
       req.cookies.jwt,
       process.env.ACCESS_TOKEN_SECRET,
       function (err, accountData) {
         if (err) {
-          if (req.flash) req.flash("notice", "Please log in")
+          req.flash("notice", "Please log in")
           res.clearCookie("jwt")
           return res.redirect("/account/login")
         }
         res.locals.accountData = accountData
-        res.locals.loggedIn = 1
+        res.locals.loggedin = 1
+
+        //agregar accountData a req para usarlo en el controlador
+        req.user = accountData
         next()
-      }
-    )
+      })
   } else {
     next()
   }
 }
 
-/* ****************************************
- * Middleware to check account type
- **************************************** */
-Util.checkEmployeeOrAdmin = (req, res, next) => {
-  if (res.locals.accountData) {
-    const { account_type } = res.locals.accountData
 
-    if (account_type === "Employee" || account_type === "Admin") {
-      return next()
-    } else {
-      if (req.flash) {
-        req.flash("notice", "Sorry, but your access to this view is restricted.")
-      }
-      return res.redirect("/")
-    }
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next()
   } else {
-    if (req.flash) req.flash("notice", "Please log in to continue.")
+    req.flash("notice", "Please log in.")
     return res.redirect("/account/login")
   }
 }
 
 /* ****************************************
- * Middleware for handling errors
+ *  Check Account Type (Employee or Admin)
+ * ************************************ */
+Util.checkAccountType = (req, res, next) => {
+
+  if (res.locals.loggedin) {
+    const { account_type } = res.locals.accountData
+    if (account_type === "Employee" || account_type === "Admin") {
+      next()
+    } else {
+      req.flash("notice", "You do not have permission to access this page.")
+      return res.redirect("/account/login")
+    }
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+}
+
+
+/* **************************************
+* Build the favorite view HTML
+* ************************************ */
+Util.buildFavoriteGrid = async function (data) {
+  let grid = ''
+  if (data.length > 0) {
+    grid = '<ul id="inv-display">'
+    data.forEach(vehicle => {
+      grid += '<li>'
+      grid += '<a href="/inv/detail/' + vehicle.inv_id
+        + '" title="View ' + vehicle.inv_make + ' ' + vehicle.inv_model
+        + ' details"><img src="' + vehicle.inv_image
+        + '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model
+        + ' on CSE Motors" /></a>'
+      grid += '<div class="namePrice">'
+      grid += '<h2>'
+      grid += '<a href="/inv/detail/' + vehicle.inv_id + '" title="View '
+        + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">'
+        + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
+      grid += '</h2>'
+      grid += '<span>$' + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
+      grid += '<br />'
+      grid += `<form action="/account/favorites/delete/${vehicle.fav_id}" method="POST" class="favorites-form">`
+      grid += '<button type="submit" class="remove-btn">Remove</button>'
+      grid += '</form>'
+      grid += '</div>'
+      grid += '</li>'
+    })
+    grid += '</ul>'
+  } else {
+    grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+  }
+  return grid
+}
+
+
+/* ****************************************
+ * Middleware For Handling Errors
+ * Wrap other function in this for 
+ * General Error Handling
  **************************************** */
-Util.handleErrors =
-  (fn) =>
-  (req, res, next) =>
-    Promise.resolve(fn(req, res, next)).catch(next)
+Util.handleErrors = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
 module.exports = Util
