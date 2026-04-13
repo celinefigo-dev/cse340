@@ -10,6 +10,8 @@ const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const dotenv = require("dotenv")
 const path = require("path")
+const session = require("express-session")
+const pool = require('./database/')
 
 // Load environment variables
 dotenv.config()
@@ -27,14 +29,16 @@ app.set("views", path.join(__dirname, "views"))
 /* ***********************
  * Middleware
  *************************/
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-
-// Prevent "messages is not defined" in EJS
-app.use((req, res, next) => {
-  res.locals.messages = () => ""
-  next()
-})
+app.use(session({
+  store: new (require('connect-pg-simple')(session))({
+    createTableIfMissing: true,
+    pool,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  name: 'sessionId',
+}))
 
 /* ***********************
  * Static Files

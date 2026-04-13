@@ -2,9 +2,10 @@ const { Pool } = require("pg");
 require("dotenv").config();
 
 /* ****************************************
- * Connection pool
- *  • Always enable SSL for Render (rejectUnauthorized:false)
- *  • Log queries only in development
+ * Connection Pool
+ * SSL Object needed for local testing of app
+ * But will cause problems in production environment
+ * If - else will make determination which to use
  **************************************** */
 
 const pool = new Pool({
