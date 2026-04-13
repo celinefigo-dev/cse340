@@ -60,16 +60,7 @@ app.use((req, res) => {
   })
 })
 
-/* ***********************
- * Express Error Handler
- *************************/
-app.use((err, req, res, next) => {
-  console.error(`Error at "${req.originalUrl}": ${err.message}`)
-  res.status(err.status || 500).render("errors/error", {
-    title: "Server Error",
-    message: err.message,
-  })
-})
+
 
 /* ***********************
  * Start Server
