@@ -1,0 +1,23 @@
+<section class="car-specs">
+    <div class="car-col upgrades">
+        <h2>
+            <%= car.name %> Upgrades
+        </h2>
+        <div class="upgrade-grid">
+            <% car.upgrades.forEach(upgrade=> { %>
+                <%- include('upgrade-card', { upgrade }) %>
+                    <% }) %>
+        </div>
+    </div>
+
+    <div class="car-col reviews">
+        <h2>
+            <%= car.name %> Reviews
+        </h2>
+        <ul class="review-list">
+            <% car.reviews.forEach(review=> { %>
+                <%- include('upgrade-list-item', { review }) %>
+                    <% }) %>
+        </ul>
+    </div>
+</section>
