@@ -1,5 +1,5 @@
 /* ******************************************
- * CSE Motors 
+ * CSE Motors
  * Basic Express setup for EJS views
  *******************************************/
 
@@ -50,10 +50,24 @@ app.get("/", (req, res) => {
   })
 })
 
-// 404 route 
+/* ***********************
+ * 404 Route
+ *************************/
 app.use((req, res) => {
   res.status(404).render("404", {
     title: "Page Not Found | CSE Motors",
+    message: "Sorry, the page you are looking for does not exist.",
+  })
+})
+
+/* ***********************
+ * Express Error Handler
+ *************************/
+app.use((err, req, res, next) => {
+  console.error(`Error at "${req.originalUrl}": ${err.message}`)
+  res.status(err.status || 500).render("errors/error", {
+    title: "Server Error",
+    message: err.message,
   })
 })
 
@@ -63,19 +77,6 @@ app.use((req, res) => {
 const port = process.env.PORT || 3000
 const host = process.env.HOST || "localhost"
 
-
-/* ***********************
- * Express Error Handler
- * Place after all other middleware
- *************************/
-  app.use(async (err, req, res, next) => {
-    let nav = await utilities.getNav();
-    console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-    res.render("errors/error", {
-      title: err.status || ' Server error',
-      message: err.message,
-    })
-  })
 app.listen(port, () => {
   console.log(`✅ Server running at http://${host}:${port}`)
-});
+})
