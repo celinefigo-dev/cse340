@@ -1,7 +1,13 @@
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
+
 const invModel = require("../models/inventory-model")
 
 const Util = {}
 
+/* ********************************
+ * Build navigation
+ * ******************************** */
 Util.getNav = async function () {
   const data = await invModel.getClassifications()
   let list = '<ul class="navigation">'
@@ -15,6 +21,9 @@ Util.getNav = async function () {
   return list
 }
 
+/* ********************************
+ * Build classification grid
+ * ******************************** */
 Util.buildClassificationGrid = async function (data) {
   let grid = ""
 
@@ -38,6 +47,9 @@ Util.buildClassificationGrid = async function (data) {
   return grid
 }
 
+/* ********************************
+ * Build details view
+ * ******************************** */
 Util.buildDetailsGrid = async function (vehicle) {
   if (!vehicle) return '<p class="notice">Vehicle details not found.</p>'
 
@@ -57,6 +69,9 @@ Util.buildDetailsGrid = async function (vehicle) {
   `
 }
 
+/* ********************************
+ * Build classification list
+ * ******************************** */
 Util.buildClassificationList = async function (classification_id = null) {
   const data = await invModel.getClassifications()
   let list = '<select name="classification_id" id="classificationList" required>'
@@ -74,11 +89,55 @@ Util.buildClassificationList = async function (classification_id = null) {
   return list
 }
 
+/* ********************************
+ * Middleware to handle errors
+ * ******************************** */
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next)
 
+/* ********************************
+ * Check JWT and set locals
+ * ******************************** */
+Util.checkJWTToken = (req, res, next) => {
+  const token = req.cookies.jwt
+  if (!token) {
+    res.locals.loggedin = false
+    return next()
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
+    if (err) {
+      res.locals.loggedin = false
+      res.clearCookie("jwt")
+      return next()
+    }
+
+    res.locals.loggedin = true
+    res.locals.accountData = accountData
+    next()
+  })
+}
+
+/* ********************************
+ * Check Employee or Admin
+ * ******************************** */
 Util.checkEmployeeOrAdmin = (req, res, next) => {
-  next()
+  if (
+    res.locals.loggedin &&
+    res.locals.accountData &&
+    (res.locals.accountData.account_type === "Employee" ||
+      res.locals.accountData.account_type === "Admin")
+  ) {
+    return next()
+  }
+
+  req.flash("notice", "Please log in with an Employee or Admin account.")
+  return res.status(403).render("account/login", {
+    title: "Login",
+    nav: res.locals.nav,
+    errors: null,
+    account_email: "",
+  })
 }
 
 module.exports = Util
