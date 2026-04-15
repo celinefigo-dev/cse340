@@ -77,6 +77,11 @@ router.post(
 )
 
 router.post(
+  "/add-review",
+  utilities.handleErrors(invController.addReview)
+)
+
+router.post(
   "/update",
   utilities.checkEmployeeOrAdmin,
   inventoryRules(),

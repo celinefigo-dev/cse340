@@ -366,5 +366,38 @@ invCont.deleteInventory = async function (req, res, next) {
     next(error)
   }
 }
+/* ***************************
+ * Submit a review
+ * ************************** */
+
+invCont.buildByInvId = async function (req, res, next) {
+  const inv_id = req.params.inv_id
+
+  const vehicle = await invModel.getItemById(inv_id)
+  const reviews = await reviewModel.getReviewsByInvId(inv_id)
+
+  const detail = await utilities.buildDetailsGrid(vehicle)
+  let nav = await utilities.getNav()
+
+  res.render("./inventory/detail", {
+    title: vehicle.inv_make + " " + vehicle.inv_model,
+    nav,
+    detail,
+    reviews,
+    inv_id,
+  })
+}
+
+invCont.addReview = async function (req, res, next) {
+  const { review_text, review_rating, inv_id } = req.body
+
+  try {
+    await reviewModel.addReview(review_text, review_rating, inv_id)
+
+    return res.redirect(`/inv/detail/${inv_id}`)
+  } catch (error) {
+    next(error)
+  }
+}
 
 module.exports = invCont

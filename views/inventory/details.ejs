@@ -8,3 +8,48 @@
 <section class="vehicle-details-wrapper">
     <%- details %>
 </section>
+
+<h3>Customer Reviews</h3>
+
+<ul>
+    <% if (reviews.length> 0) { %>
+        <% reviews.forEach(r=> { %>
+            <li>
+                <%= r.review_text %> (<%= r.review_rating %>/5)
+            </li>
+            <% }) %>
+                <% } else { %>
+                    <li>No reviews yet.</li>
+                    <% } %>
+</ul>
+
+<h3>Add a Review</h3>
+
+<form action="/inv/add-review" method="post" class="form-card">
+    <input type="hidden" name="inv_id" value="<%= inv_id %>">
+
+    <label for="review_text">Your Review</label>
+    <textarea name="review_text" required></textarea>
+
+    <label for="review_rating">Rating (1–5)</label>
+    <input type="number" name="review_rating" min="1" max="5" step="0.5" required>
+
+    <button type="submit" class="btn">Submit Review</button>
+</form>
+
+<h3>Customer Reviews</h3>
+
+<ul>
+    <% if (reviews.length> 0) { %>
+        <% reviews.forEach(r=> { %>
+            <li>
+                <strong>
+                    <%= r.review_rating %>/5
+                </strong> -
+                <%= r.review_text %>
+            </li>
+            <% }) %>
+                <% } else { %>
+                    <li>No reviews yet.</li>
+                    <% } %>
+</ul>
