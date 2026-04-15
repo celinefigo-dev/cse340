@@ -7,18 +7,18 @@ const regValidate = require("../utilities/account-validation")
 
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
 
-router.get("/", utilities.handleErrors(accountController.buildManagement))
-
-router.get(
-  "/update/:account_id",
-  utilities.handleErrors(accountController.buildUpdateView)
-)
-
 router.post(
   "/login",
   regValidate.loginRules(),
   regValidate.checkLoginData,
   utilities.handleErrors(accountController.accountLogin)
+)
+
+router.get("/", utilities.handleErrors(accountController.buildManagement))
+
+router.get(
+  "/update/:account_id",
+  utilities.handleErrors(accountController.buildUpdateView)
 )
 
 router.post(

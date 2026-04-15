@@ -64,42 +64,44 @@ accountController.accountLogin = async function (req, res, next) {
     const accountData = await accountModel.getAccountByEmail(account_email)
 
     if (!accountData) {
-      req.flash("notice", "Please check your credentials and try again.")
+      req.flash("notice", "Please check your email or password and try again.")
       return res.status(400).render("account/login", {
         title: "Login",
         nav,
         errors: null,
         account_email,
+        notice: req.flash("notice"),
       })
     }
 
-    const passwordMatch = await bcrypt.compare(account_password, accountData.account_password)
+    const passwordMatch = await bcrypt.compare(
+      account_password,
+      accountData.account_password
+    )
 
     if (!passwordMatch) {
-      req.flash("notice", "Please check your credentials and try again.")
+      req.flash("notice", "Please check your email or password and try again.")
       return res.status(400).render("account/login", {
         title: "Login",
         nav,
         errors: null,
         account_email,
+        notice: req.flash("notice"),
       })
     }
 
     delete accountData.account_password
 
-    const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "1h",
-    })
+    const accessToken = jwt.sign(
+      accountData,
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1h" }
+    )
 
-    if (process.env.NODE_ENV === "development") {
-      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
-    } else {
-      res.cookie("jwt", accessToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 3600 * 1000,
-      })
-    }
+    res.cookie("jwt", accessToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 1000,
+    })
 
     return res.redirect("/account/")
   } catch (error) {
@@ -123,15 +125,10 @@ accountController.updateAccount = async function (req, res, next) {
         expiresIn: "1h",
       })
 
-      if (process.env.NODE_ENV === "development") {
-        res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
-      } else {
-        res.cookie("jwt", accessToken, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 60 * 60 * 1000,
-        })
-      }
+      res.cookie("jwt", accessToken, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 1000,
+      })
 
       req.flash("notice", "Your account information was updated successfully.")
       return res.redirect("/account/")

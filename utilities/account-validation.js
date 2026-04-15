@@ -58,6 +58,7 @@ validate.checkLoginData = async (req, res, next) => {
       nav,
       errors: errors.array(),
       account_email: req.body.account_email,
+      notice: null,
     })
   }
   next()
@@ -87,7 +88,7 @@ validate.checkUpdateData = async (req, res, next) => {
     return res.render("account/update", {
       title: "Update Account",
       nav,
-      errors: [{ msg: "That email address already exists. Please use a different email." }],
+      errors: [{ msg: "That email already exists. Please use another one." }],
       notice: null,
       account_id,
       account_firstname,
