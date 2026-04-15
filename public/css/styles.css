@@ -4,24 +4,25 @@
 *:after {
   box-sizing: border-box;
   scroll-behavior: smooth;
-  transition: all 0.3s ease;
-
 }
 
 :root {
   --white: #fff;
   --p-background: #276ba2;
-  --s-background: #4C5154;
-  --highlight: #F1C40F;
+  --s-background: #4c5154;
+  --highlight: #f1c40f;
   --beige: #fdf5ea;
   --black: #000;
   --ash: #d9d9d9;
+  --border: #d9d9d9;
 }
 
 body {
   background-color: var(--white);
   padding: 0;
   margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--black);
 }
 
 #wrapper {
@@ -30,113 +31,156 @@ body {
   padding: 20px;
 }
 
-/* Header  */
+/* Header */
 #top-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem 0;
 }
 
 .siteName a {
   font-size: 30px;
-  font-weight: 500;
+  font-weight: 700;
   text-decoration: none;
   color: var(--black);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.account-link a,
 #tools a {
   font-size: 18px;
   text-transform: uppercase;
   color: var(--black);
   text-decoration: none;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.account-link a:hover,
 #tools a:hover {
   text-decoration: underline;
   color: var(--highlight);
 }
 
 /* Navigation */
-#wrapper nav ul {
-  padding: 20px;
+nav {
+  margin-bottom: 1rem;
+}
+
+.menu-toggle {
+  display: none;
+  background: var(--p-background);
+  color: var(--white);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+#wrapper nav ul,
+.navigation {
+  padding: 14px 20px;
   background-color: var(--p-background);
   display: flex;
   align-items: center;
   justify-content: space-around;
   list-style-type: none;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  border-radius: 8px;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-#wrapper nav li {
+#wrapper nav li,
+.navigation li {
   color: var(--white);
   font-size: 14px;
 }
 
-#wrapper nav li a {
+#wrapper nav li a,
+.navigation li a {
   color: var(--white);
   text-decoration: none;
+  font-weight: 500;
 }
 
-#wrapper nav li a:hover {
+#wrapper nav li a:hover,
+.navigation li a:hover {
   color: var(--highlight);
 }
 
 /* Hero Section */
 .hero {
-  background: url('/images/vehicles/delorean-tn.jpg') left/cover no-repeat;
-  padding: 1rem;
-  height: 500px;
+  background: url("/images/vehicles/delorean-tn.jpg") center/cover no-repeat;
+  padding: 2rem 1rem;
+  min-height: 420px;
   color: var(--white);
   display: flex;
   flex-direction: column;
-  align-items: start;
+  justify-content: center;
+  align-items: flex-start;
+  border-radius: 10px;
 }
 
 .hero-caption {
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.75);
   padding: 20px;
-  border-radius: 4px;
+  border-radius: 8px;
+  max-width: 420px;
 }
 
 .hero h1 {
-  font-size: 25px;
+  font-size: 28px;
   color: var(--black);
-  margin-bottom: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 12px;
 }
 
 .hero h2 {
   font-size: 20px;
   color: var(--p-background);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 10px;
 }
 
 .hero p {
   color: var(--p-background);
   font-size: 16px;
   margin-bottom: 10px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.cta-btn {
-  display: block;
-  margin: auto;
+.cta-btn,
+.btn {
+  display: inline-block;
   padding: 10px 20px;
   background-color: var(--highlight);
   color: var(--black);
   font-size: 14px;
   text-align: center;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-weight: bold;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: none;
+  cursor: pointer;
 }
 
-.cta-btn:hover {
+.cta-btn:hover,
+.btn:hover {
   background-color: var(--p-background);
   color: var(--white);
+}
+
+/* Home Cards */
+.home-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.08);
 }
 
 /* Car Specs */
@@ -162,7 +206,7 @@ body {
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.08);
 }
 
 .upgrade-card img {
@@ -176,48 +220,43 @@ body {
 .upgrade-card p {
   color: var(--white);
   font-size: 18px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .review-list {
   list-style-type: disc;
+  padding-left: 20px;
 }
 
 .review-item {
   margin-bottom: 20px;
   font-size: 18px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--black);
 }
 
-/* Classification Grid */
+/* Inventory Grid */
 #inv-display {
-  list-style-type: none;
-  padding: 0;
+  list-style: none;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
-  margin-top: 2rem;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
 }
 
 #inv-display li {
-  border: 1px solid var(--ash);
-  border-radius: 8px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
   padding: 1rem;
-  /* background-color: var(--beige); */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease;
-}
-
-#inv-display li:hover {
-  transform: scale(1.02);
+  text-align: center;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.08);
 }
 
 #inv-display img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 4px;
+  max-width: 260px;
+  height: auto;
+  border-radius: 8px;
 }
 
 .namePrice {
@@ -229,7 +268,11 @@ body {
   font-size: 18px;
   margin: 0.5rem 0;
   color: var(--p-background);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.namePrice h2 a {
+  text-decoration: none;
+  color: var(--p-background);
 }
 
 .namePrice span {
@@ -238,15 +281,16 @@ body {
   color: var(--s-background);
 }
 
-/* Details page styling */
+/* Details page */
 .vehicle-detail {
   display: flex;
   flex-direction: row;
   gap: 2rem;
-  padding: 2rem;
+  padding: 1rem 0;
   flex-wrap: wrap;
 }
 
+.vehicle-detail__image img,
 .vehicle-detail .vehicle-img img {
   width: 100%;
   max-width: 500px;
@@ -254,13 +298,15 @@ body {
   border-radius: 8px;
 }
 
+.vehicle-detail__info,
 .vehicle-detail .vehicle-info {
   flex: 1;
   max-width: 600px;
 }
 
 .vehicle-info h2,
-.vehicle-info h3 {
+.vehicle-info h3,
+.vehicle-detail__info h2 {
   margin-top: 0;
 }
 
@@ -273,21 +319,34 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Form container */
-.form {
+/* Forms */
+.form-section {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.form,
+.form-card {
   margin: auto;
   background: var(--white);
   padding: 20px;
   box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
   width: 100%;
-  max-width: 400px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.form-card {
+  display: grid;
+  gap: 1rem;
 }
 
 .form .form-group {
   margin-bottom: 1.2rem;
 }
 
-.form .form-label {
+.form .form-label,
+.form-card label {
   display: block;
   font-weight: 600;
   margin-bottom: 0.4rem;
@@ -295,18 +354,24 @@ body {
   color: var(--s-background);
 }
 
-.form .form-input {
+.form .form-input,
+.form-card input,
+.form-card select,
+.form-card textarea {
   width: 100%;
-  padding: 10px 20px;
+  padding: 10px 14px;
   font-size: 16px;
   font-weight: 300;
   border: 1.5px solid var(--ash);
   color: var(--s-background);
-  transition: border-color 0.25s ease;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 6px;
+  background-color: var(--white);
 }
 
-.form .form-input:focus {
+.form .form-input:focus,
+.form-card input:focus,
+.form-card select:focus,
+.form-card textarea:focus {
   outline: none;
   border-color: var(--highlight);
 }
@@ -319,7 +384,6 @@ body {
   margin-top: 0.3rem;
   user-select: none;
   color: var(--s-background);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .form .checkbox-input {
@@ -329,21 +393,21 @@ body {
 .form .form-hint {
   display: block;
   margin-top: 10px;
-  font-size: 14x;
+  font-size: 14px;
   color: var(--s-background);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Buttons */
 .btn {
   width: 100%;
   font-weight: 600;
-  padding: 10px 20px;
+  padding: 12px 20px;
   font-size: 16px;
-  border: none;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.25s ease;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .btn-primary {
@@ -354,21 +418,50 @@ body {
 .btn-primary:hover,
 .btn-primary:focus {
   background-color: var(--highlight);
+  color: var(--black);
   outline: none;
 }
 
-/* Error list */
-.error-list {
-  padding: 5px 10px;
-  margin-bottom: 1.5rem;
-  color: var(--highlight);
-  list-style-type: disc;
-  max-width: 380px;
-  margin-left: auto;
-  margin-right: auto;
+.btn.secondary {
+  background-color: var(--s-background);
+  color: var(--white);
 }
 
-/* Register link container */
+.btn.secondary:hover {
+  background-color: #3c3f41;
+}
+
+.btn.danger {
+  background-color: #e74c3c;
+  color: var(--white);
+}
+
+.btn.danger:hover {
+  background-color: #c0392b;
+}
+
+/* Messages */
+.error-list {
+  padding: 10px 20px;
+  margin-bottom: 1.5rem;
+  color: #b00020;
+  list-style-type: disc;
+  max-width: 100%;
+  background: #fff3f3;
+  border: 1px solid #f2b5b5;
+  border-radius: 8px;
+}
+
+.notice {
+  background-color: var(--highlight);
+  color: var(--black);
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+/* Account */
 .register {
   margin-top: 10px;
   font-size: 14px;
@@ -395,16 +488,6 @@ body {
   text-align: center;
 }
 
-.notice {
-  background-color: var(--highlight);
-  color: var(--black);
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 1.5rem;
-  font-weight: 500;
-}
-
-/* Account dashboard */
 .account-dashboard {
   background-color: var(--white);
   border-radius: 8px;
@@ -440,9 +523,7 @@ body {
 
 .account-info li {
   font-size: 16px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 
 .account-actions {
   display: flex;
@@ -453,37 +534,12 @@ body {
 
 .account-actions a {
   text-decoration: none;
-}
-
-.account-actions .btn {
-  font-weight: 600;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.25s ease;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   width: 100%;
   max-width: 300px;
 }
 
-.btn.secondary {
-  background-color: var(--s-background);
-  color: var(--white);
-}
-
-.btn.secondary:hover {
-  background-color: #3c3f41;
-}
-
-.btn.danger {
-  background-color: #e74c3c;
-  color: var(--white);
-}
-
-.btn.danger:hover {
-  background-color: #c0392b;
+.account-actions .btn {
+  max-width: 300px;
 }
 
 .management-section h3 {
@@ -506,15 +562,63 @@ body {
   color: var(--s-background);
 }
 
+/* Inventory management */
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+  margin-bottom: 0.5rem;
+}
+
+.action-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: var(--white);
+}
+
+.inventory-table th,
+.inventory-table td {
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.inventory-table th {
+  background: #eef3ff;
+}
+
+.inventory-grid,
+.vehicle-details-wrapper {
+  margin-top: 1rem;
+}
+
+/* Footer */
+footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--s-background);
+}
+
+/* Desktop */
 @media screen and (min-width: 768px) {
   body {
-    background: url('../images/site/checkerboard.jpg');
+    background: url("../images/site/checkerboard.jpg");
     background-size: 500px;
     background-attachment: fixed;
   }
 
   #wrapper {
-    background-color: var(--white);
     max-width: 1000px;
     margin: 2rem auto;
     padding: 2rem;
@@ -524,17 +628,18 @@ body {
   }
 
   #top-header {
-    padding: 1.5rem 3rem;
+    padding: 1rem 0;
   }
 
   .hero {
     padding: 2rem;
-    background: url('/images/vehicles/delorean.jpg') left/cover no-repeat;
+    background: url("/images/vehicles/delorean.jpg") center/cover no-repeat;
+    min-height: 500px;
   }
 
   .hero h1 {
     font-size: 40px;
-    margin-bottom: 50px;
+    margin-bottom: 30px;
   }
 
   .hero h2 {
@@ -543,6 +648,10 @@ body {
 
   .hero p {
     font-size: 18px;
+  }
+
+  .home-content {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .car-specs {
@@ -565,49 +674,20 @@ body {
   .form {
     max-width: 420px;
   }
+}
 
-    .page-header {
-      margin-bottom: 1.5rem;
-    }
-  
-    .page-header h1 {
-      margin-bottom: 0.5rem;
-    }
-  
-    .action-links {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-  
-    .inventory-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-  
-    .inventory-table th,
-    .inventory-table td {
-      border: 1px solid var(--border);
-      padding: 0.75rem;
-      text-align: left;
-    }
-  
-    .inventory-table th {
-      background: #eef3ff;
-    }
-  
-    .inventory-grid {
-      margin-top: 1rem;
-    }
-  
-    .vehicle-details-wrapper {
-      margin-top: 1rem;
-    }
-  
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
+/* Mobile */
+@media screen and (max-width: 767px) {
+  .menu-toggle {
+    display: inline-block;
+  }
+
+  .navigation {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vehicle-detail {
+    flex-direction: column;
+  }
 }

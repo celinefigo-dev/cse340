@@ -1,9 +1,8 @@
-<% if (title) { %>
-    <h1 class="page-title">
-        <%= title %>
-    </h1>
-    <% } else { res.redirect('/') } %>
+<section class="page-header">
+  <h1><%= title %></h1>
+  <p>Browse the vehicles available in this classification.</p>
+</section>
 
-        <%# messages() %>
-
-            <%- grid %>
+<section class="inventory-grid">
+  <%- grid %>
+</section>

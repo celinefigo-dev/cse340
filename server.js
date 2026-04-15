@@ -10,7 +10,10 @@ const app = express()
 const port = process.env.PORT || 3000
 const host = process.env.HOST || "localhost"
 
+const staticRoute = require("./routes/static")
 const inventoryRoute = require("./routes/inventoryRoutes")
+const accountRoute = require("./routes/accountRoute")
+const appointmentRoute = require("./routes/appointmentRoute")
 
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
@@ -21,10 +24,10 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "public")))
 
+// Global variables for all views
 app.use(async (req, res, next) => {
   try {
-    const nav = await utilities.getNav()
-    res.locals.nav = nav
+    res.locals.nav = await utilities.getNav()
     res.locals.messages = () => ""
     next()
   } catch (error) {
@@ -32,27 +35,21 @@ app.use(async (req, res, next) => {
   }
 })
 
+app.use("/", staticRoute)
 app.use("/inv", inventoryRoute)
+app.use("/account", accountRoute)
+app.use("/appointments", appointmentRoute)
 
-app.get("/", async (req, res, next) => {
-  try {
-    res.render("index", {
-      title: "Home | CSE Motors",
-      nav: res.locals.nav,
-    })
-  } catch (error) {
-    next(error)
-  }
-})
-
+// 404 page
 app.use((req, res) => {
   res.status(404).render("404", {
     title: "404 | Page Not Found",
     message: "Sorry, the page you are looking for does not exist.",
-    nav: res.locals.nav,
+    nav: res.locals.nav || "",
   })
 })
 
+// Error handler
 app.use((err, req, res, next) => {
   console.error(`Error at "${req.originalUrl}": ${err.message}`)
   res.status(err.status || 500).render("errors/error", {

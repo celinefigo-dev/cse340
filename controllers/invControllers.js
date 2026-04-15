@@ -205,7 +205,7 @@ invCont.addInventory = async function (req, res, next) {
 }
 
 /* ***************************
- * Return inventory by classification as JSON
+ * Return inventory JSON
  * ************************** */
 invCont.getInventoryJSON = async function (req, res, next) {
   try {

@@ -1,6 +1,5 @@
 <section class="form-section">
-    <h1>Account Login</h1>
-    <p>Sign in to access your account features.</p>
+    <h1>Login</h1>
 
     <% if (errors && errors.length) { %>
         <ul class="notice error-list">
@@ -13,9 +12,8 @@
         <% } %>
 
             <form action="#" method="post" class="form-card">
-                <label for="account_email">Email Address</label>
-                <input type="email" id="account_email" name="account_email" required
-                    value="<%= typeof account_email !== 'undefined' ? account_email : '' %>">
+                <label for="account_email">Email</label>
+                <input type="email" id="account_email" name="account_email" required>
 
                 <label for="account_password">Password</label>
                 <input type="password" id="account_password" name="account_password" required>

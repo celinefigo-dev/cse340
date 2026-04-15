@@ -2,9 +2,6 @@ const invModel = require("../models/inventory-model")
 
 const Util = {}
 
-/* ********************************
- * Build navigation HTML
- * ******************************** */
 Util.getNav = async function () {
   const data = await invModel.getClassifications()
   let list = '<ul class="navigation">'
@@ -18,13 +15,11 @@ Util.getNav = async function () {
   return list
 }
 
-/* ********************************
- * Build classification grid view HTML
- * ******************************** */
 Util.buildClassificationGrid = async function (data) {
-  let grid
+  let grid = ""
+
   if (data.length > 0) {
-    grid = '<ul id="inv-display">'
+    grid += '<ul id="inv-display">'
     data.forEach((vehicle) => {
       grid += "<li>"
       grid += `<a href="/inv/detail/${vehicle.inv_id}" title="View ${vehicle.inv_make} ${vehicle.inv_model} details"><img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on CSE Motors"></a>`
@@ -39,16 +34,12 @@ Util.buildClassificationGrid = async function (data) {
   } else {
     grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
+
   return grid
 }
 
-/* ********************************
- * Build vehicle detail HTML
- * ******************************** */
 Util.buildDetailsGrid = async function (vehicle) {
-  if (!vehicle) {
-    return '<p class="notice">Vehicle details not found.</p>'
-  }
+  if (!vehicle) return '<p class="notice">Vehicle details not found.</p>'
 
   return `
     <section class="vehicle-detail">
@@ -66,9 +57,6 @@ Util.buildDetailsGrid = async function (vehicle) {
   `
 }
 
-/* ********************************
- * Build classification select list
- * ******************************** */
 Util.buildClassificationList = async function (classification_id = null) {
   const data = await invModel.getClassifications()
   let list = '<select name="classification_id" id="classificationList" required>'
@@ -76,10 +64,7 @@ Util.buildClassificationList = async function (classification_id = null) {
 
   data.forEach((row) => {
     list += `<option value="${row.classification_id}"`
-    if (
-      classification_id != null &&
-      Number(classification_id) === Number(row.classification_id)
-    ) {
+    if (Number(classification_id) === Number(row.classification_id)) {
       list += " selected"
     }
     list += `>${row.classification_name}</option>`
@@ -89,15 +74,9 @@ Util.buildClassificationList = async function (classification_id = null) {
   return list
 }
 
-/* ********************************
- * Error handling wrapper
- * ******************************** */
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next)
 
-/* ********************************
- * Temporary auth middleware
- * ******************************** */
 Util.checkEmployeeOrAdmin = (req, res, next) => {
   next()
 }

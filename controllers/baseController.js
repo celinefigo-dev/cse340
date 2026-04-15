@@ -1,13 +1,17 @@
-const utilities = require("../utilities/")
+const utilities = require("../utilities")
+
 const baseController = {}
 
-baseController.buildHome = async function(req, res){
-  const nav = await utilities.getNav()
-  req.flash("notice", "This is a flash message.")
-  res.render("index", {title: "Home", nav})
+baseController.buildHome = async function (req, res, next) {
+  try {
+    const nav = await utilities.getNav()
+    res.render("index", {
+      title: "Home | CSE Motors",
+      nav,
+    })
+  } catch (error) {
+    next(error)
+  }
 }
 
-baseController.triggerError = function(req, res, next) {
-  throw new Error('This is an intentional 500 error!')
-}
 module.exports = baseController
