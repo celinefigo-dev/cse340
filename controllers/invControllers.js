@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model")
+const reviewModel = require("../models/review-model")
 const utilities = require("../utilities")
 
 const invCont = {}
@@ -21,7 +22,7 @@ invCont.buildByClassificationId = async function (req, res, next) {
     const nav = await utilities.getNav()
     const className = data[0].classification_name
 
-    res.render("./inventory/classification", {
+    res.render("inventory/classification", {
       title: `${className} vehicles`,
       nav,
       grid,
@@ -36,16 +37,17 @@ invCont.buildByClassificationId = async function (req, res, next) {
  * ************************** */
 invCont.buildByInvId = async function (req, res, next) {
   try {
-    const invId = req.params.inv_id
-    const data = await invModel.getInventoryByInvId(invId)
+    const inv_id = parseInt(req.params.inv_id)
 
-    if (!data || data.length === 0) {
+    const vehicle = await invModel.getInventoryById(inv_id)
+    const reviews = await reviewModel.getReviewsByInvId(inv_id)
+
+    if (!vehicle) {
       const err = new Error("Sorry, the vehicle details could not be found.")
       err.status = 404
       return next(err)
     }
 
-    const vehicle = data[0]
     const nav = await utilities.getNav()
     const details = await utilities.buildDetailsGrid(vehicle)
 
@@ -53,6 +55,8 @@ invCont.buildByInvId = async function (req, res, next) {
       title: `${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}`,
       nav,
       details,
+      reviews,
+      inv_id,
     })
   } catch (error) {
     next(error)
@@ -235,7 +239,7 @@ invCont.editInventory = async function (req, res, next) {
     )
     const itemName = `${itemData.inv_make} ${itemData.inv_model}`
 
-    res.render("./inventory/edit-inventory", {
+    res.render("inventory/edit-inventory", {
       title: `Edit ${itemName}`,
       nav,
       classificationSelect,
@@ -332,7 +336,7 @@ invCont.deleteView = async function (req, res, next) {
     const itemData = await invModel.getInventoryById(inv_id)
     const itemName = `${itemData.inv_make} ${itemData.inv_model}`
 
-    res.render("./inventory/delete-confirm", {
+    res.render("inventory/delete-confirm", {
       title: `Delete ${itemName}`,
       nav,
       errors: null,
@@ -366,32 +370,14 @@ invCont.deleteInventory = async function (req, res, next) {
     next(error)
   }
 }
+
 /* ***************************
  * Submit a review
  * ************************** */
-
-invCont.buildByInvId = async function (req, res, next) {
-  const inv_id = req.params.inv_id
-
-  const vehicle = await invModel.getItemById(inv_id)
-  const reviews = await reviewModel.getReviewsByInvId(inv_id)
-
-  const detail = await utilities.buildDetailsGrid(vehicle)
-  let nav = await utilities.getNav()
-
-  res.render("./inventory/detail", {
-    title: vehicle.inv_make + " " + vehicle.inv_model,
-    nav,
-    detail,
-    reviews,
-    inv_id,
-  })
-}
-
 invCont.addReview = async function (req, res, next) {
-  const { review_text, review_rating, inv_id } = req.body
-
   try {
+    const { review_text, review_rating, inv_id } = req.body
+
     await reviewModel.addReview(review_text, review_rating, inv_id)
 
     return res.redirect(`/inv/detail/${inv_id}`)
