@@ -14,7 +14,7 @@ const inventoryRoute = require("./routes/inventoryRoutes")
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 app.use(expressLayouts)
-app.set("layout", "./layouts/layout")
+app.set("layout", "layouts/layout")
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -27,10 +27,14 @@ app.use((req, res, next) => {
 
 app.use("/inv", inventoryRoute)
 
-app.get("/", (req, res) => {
-  res.render("index", {
-    title: "Home | CSE Motors",
-  })
+app.get("/", async (req, res, next) => {
+  try {
+    res.render("index", {
+      title: "Home | CSE Motors",
+    })
+  } catch (error) {
+    next(error)
+  }
 })
 
 app.use((req, res) => {
@@ -43,11 +47,11 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error(`Error at "${req.originalUrl}": ${err.message}`)
   res.status(err.status || 500).render("errors/error", {
-    title: "Server Error",
+    title: `${err.status || 500} | Server Error`,
     message: err.message || "Something went wrong.",
   })
 })
 
 app.listen(port, () => {
-  console.log(`✅ Server running at http://${host}:${port}`)
+  console.log(`Server running at http://${host}:${port}`)
 })
