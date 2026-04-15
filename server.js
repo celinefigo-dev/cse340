@@ -28,13 +28,16 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, "public")))
 
+app.use(cookieParser())
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "week5-secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
   })
 )
+
 app.use(flash())
 
 app.use(async (req, res, next) => {
