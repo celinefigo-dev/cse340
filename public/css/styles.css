@@ -565,4 +565,49 @@ body {
   .form {
     max-width: 420px;
   }
+
+    .page-header {
+      margin-bottom: 1.5rem;
+    }
+  
+    .page-header h1 {
+      margin-bottom: 0.5rem;
+    }
+  
+    .action-links {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+  
+    .inventory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+  
+    .inventory-table th,
+    .inventory-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+  
+    .inventory-table th {
+      background: #eef3ff;
+    }
+  
+    .inventory-grid {
+      margin-top: 1rem;
+    }
+  
+    .vehicle-details-wrapper {
+      margin-top: 1rem;
+    }
+  
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
 }

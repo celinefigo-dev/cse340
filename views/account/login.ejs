@@ -1,52 +1,25 @@
-<% if(title) { %>
-    <h1 class="page-title">
-        <%= title %>
-    </h1>
-    <% } else { %>
-        <% res.redirect('/') %>
-            <% } %>
+<section class="form-section">
+    <h1>Account Login</h1>
+    <p>Sign in to access your account features.</p>
 
-                <% if (errors) { %>
-                    <ul class="error-list">
-                        <% errors.array().forEach(error=> { %>
-                            <% if (error.msg !=="Invalid value" ) { %>
-                                <li>
-                                    <%= error.msg %>
-                                </li>
-                                <% } %>
-                                    <% }) %>
-                    </ul>
-                    <% } %>
+    <% if (errors && errors.length) { %>
+        <ul class="notice error-list">
+            <% errors.forEach(error=> { %>
+                <li>
+                    <%= error.msg %>
+                </li>
+                <% }) %>
+        </ul>
+        <% } %>
 
-                        <main>
-                            <form id="loginForm" action="/account/login" method="post" class="form">
-                                <div class="form-group">
-                                    <label for="account_email" class="form-label">Email Address</label>
-                                    <input type="email" id="account_email" name="account_email" required
-                                        value="<%= typeof account_email != 'undefined' ? account_email : '' %>"
-                                        class="form-input" />
-                                </div>
+            <form action="#" method="post" class="form-card">
+                <label for="account_email">Email Address</label>
+                <input type="email" id="account_email" name="account_email" required
+                    value="<%= typeof account_email !== 'undefined' ? account_email : '' %>">
 
-                                <div class="form-group">
-                                    <label for="account_password" class="form-label">Password</label>
-                                    <input type="password" id="account_password" name="account_password"
-                                        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
-                                        title="Password must be at least 12 characters, include 1 uppercase letter, 1 number, and 1 special character."
-                                        required class="form-input" />
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="togglePassword" class="checkbox-input" />
-                                        Show Password
-                                    </label>
-                                    <small class="form-hint">
-                                        Password must be at least 12 characters, include 1 uppercase letter, 1 number,
-                                        and 1 special character.
-                                    </small>
-                                </div>
+                <label for="account_password">Password</label>
+                <input type="password" id="account_password" name="account_password" required>
 
-                                <button type="submit" class="btn btn-primary">Login</button>
-                            </form>
-
-                            <div class="register">
-                                <p>No account? <a href="/account/register" class="link">Sign up</a></p>
-                            </div>
-                        </main>
+                <button type="submit" class="btn">Login</button>
+            </form>
+</section>
