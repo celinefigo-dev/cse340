@@ -372,7 +372,7 @@ invCont.deleteInventory = async function (req, res, next) {
 }
 
 /* ***************************
- * Submit a review
+ * Submit a review to us
  * ************************** */
 invCont.addReview = async function (req, res, next) {
   try {
