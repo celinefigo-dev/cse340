@@ -2,7 +2,6 @@
     <h1>
         <%= title %>
     </h1>
-    <p>Sign in to access your account.</p>
 
     <% if (notice && notice.length) { %>
         <div class="notice">
@@ -20,13 +19,13 @@
                 </ul>
                 <% } %>
 
-                    <form action="/account/login" method="post" class="form-card">
-                        <label for="account_email">Email Address</label>
-                        <input type="email" id="account_email" name="account_email" required
-                            value="<%= typeof account_email !== 'undefined' ? account_email : '' %>">
+                    <form id="loginForm" action="/account/login" method="post" class="form-card">
+                        <label for="accountEmail">Email Address</label>
+                        <input type="email" name="account_email" id="accountEmail" required
+                            value="<%= locals.account_email || '' %>">
 
-                        <label for="account_password">Password</label>
-                        <input type="password" id="account_password" name="account_password" required>
+                        <label for="accountPassword">Password</label>
+                        <input type="password" name="account_password" id="accountPassword" required>
 
                         <button type="submit" class="btn">Login</button>
                     </form>

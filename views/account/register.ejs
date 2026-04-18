@@ -1,62 +1,41 @@
-<% if(title) { %>
-    <h1 class="page-title">
+<section class="form-section">
+    <h1>
         <%= title %>
     </h1>
-    <% } else { %>
-        <% res.redirect('/') %>
-            <% } %>
 
-                <% if (errors) { %>
-                    <ul class="error-list">
-                        <% errors.array().forEach(error=> { %>
-                            <% if (error.msg !=="Invalid value" ) { %>
-                                <li>
-                                    <%= error.msg %>
-                                </li>
-                                <% } %>
-                                    <% }) %>
-                    </ul>
-                    <% } %>
+    <% if (notice && notice.length) { %>
+        <div class="notice">
+            <%= notice[0] %>
+        </div>
+        <% } %>
 
-                        <main>
-                            <form action="/account/register" method="post" class="form">
-                                <div class="form-group">
-                                    <label for="account_firstname" class="form-label">First Name</label>
-                                    <input type="text" id="account_firstname" name="account_firstname"
-                                        value="<%= typeof account_firstname != 'undefined' ? account_firstname : '' %>"
-                                        required class="form-input" />
-                                </div>
+            <% if (errors && errors.length) { %>
+                <ul class="notice error-list">
+                    <% errors.forEach(error=> { %>
+                        <li>
+                            <%= error.msg %>
+                        </li>
+                        <% }) %>
+                </ul>
+                <% } %>
 
-                                <div class="form-group">
-                                    <label for="account_lastname" class="form-label">Last Name</label>
-                                    <input type="text" id="account_lastname" name="account_lastname"
-                                        value="<%= typeof account_lastname != 'undefined' ? account_lastname : '' %>"
-                                        required class="form-input" />
-                                </div>
+                    <form action="/account/register" method="post" class="form-card">
+                        <label for="accountFirstname">First Name</label>
+                        <input type="text" name="account_firstname" id="accountFirstname" required
+                            value="<%= locals.account_firstname || '' %>">
 
-                                <div class="form-group">
-                                    <label for="account_email" class="form-label">Email</label>
-                                    <input type="email" id="account_email" name="account_email"
-                                        value="<%= typeof account_email != 'undefined' ? account_email : '' %>" required
-                                        class="form-input" />
-                                </div>
+                        <label for="accountLastname">Last Name</label>
+                        <input type="text" name="account_lastname" id="accountLastname" required
+                            value="<%= locals.account_lastname || '' %>">
 
-                                <div class="form-group">
-                                    <label for="account_password" class="form-label">Password</label>
-                                    <input type="password" id="account_password" name="account_password"
-                                        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
-                                        title="Password must be at least 12 characters, include 1 uppercase letter, 1 number, and 1 special character."
-                                        required class="form-input" />
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="togglePassword" class="checkbox-input" />
-                                        Show Password
-                                    </label>
-                                    <small class="form-hint">
-                                        Password must be at least 12 characters, include 1 uppercase letter, 1 number,
-                                        and 1 special character.
-                                    </small>
-                                </div>
+                        <label for="accountEmail">Email Address</label>
+                        <input type="email" name="account_email" id="accountEmail" required
+                            value="<%= locals.account_email || '' %>">
 
-                                <button type="submit" class="btn btn-primary">Register</button>
-                            </form>
-                        </main>
+                        <label for="accountPassword">Password</label>
+                        <input type="password" name="account_password" id="accountPassword" required
+                            pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':&quot;\\|,.<>\/?]).{12,}$">
+
+                        <button type="submit" class="btn">Register</button>
+                    </form>
+</section>

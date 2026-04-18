@@ -1,98 +1,59 @@
-<% if(title) { %>
-    <h1 class="title">
+<section class="form-section">
+    <h1>
         <%= title %>
     </h1>
-    <% } else { res.redirect('/') } %>
-        <% if (notice && notice.length> 0) { %>
-            <div class="notice">
-                <% notice.forEach(msg=> { %>
-                    <p>
-                        <%= msg %>
-                    </p>
-                    <% }) %>
-            </div>
-            <% } %>
 
-                <!-- Validation Errors -->
-                <% if (errors && errors.array && errors.array().length> 0) { %>
-                    <div class="errors">
-                        <ul>
-                            <% errors.array().forEach(error=> { %>
-                                <li>
-                                    <%= error.msg %>
-                                </li>
-                                <% }) %>
-                        </ul>
+    <% if (notice && notice.length) { %>
+        <div class="notice">
+            <%= notice[0] %>
+        </div>
+        <% } %>
+
+            <% if (errors && errors.length) { %>
+                <ul class="notice error-list">
+                    <% errors.forEach(error=> { %>
+                        <li>
+                            <%= error.msg %>
+                        </li>
+                        <% }) %>
+                </ul>
+                <% } %>
+
+                    <div class="form-card">
+                        <h2>Account Update</h2>
+                        <form action="/account/update" method="post">
+                            <input type="hidden" name="account_id" value="<%= account_id %>">
+
+                            <label for="account_firstname">First Name</label>
+                            <input type="text" id="account_firstname" name="account_firstname" required
+                                value="<%= account_firstname %>">
+
+                            <label for="account_lastname">Last Name</label>
+                            <input type="text" id="account_lastname" name="account_lastname" required
+                                value="<%= account_lastname %>">
+
+                            <label for="account_email">Email Address</label>
+                            <input type="email" id="account_email" name="account_email" required
+                                value="<%= account_email %>">
+
+                            <button type="submit" class="btn">Update Account</button>
+                        </form>
                     </div>
-                    <% } %>
 
-                        <!-- Account Update Form -->
-                        <section class="section-update">
-                            <form method="post" action="/account/updateAccount/<%= accountData.account_id %>"
-                                class="form">
-                                <div class="form-group">
-                                    <label for="account_id" class="form-label">Account ID</label>
-                                    <input type="hidden" name="account_id" value="<%= accountData.account_id %>"
-                                        class="form-input" />
-                                </div>
+                    <div class="form-card">
+                        <h2>Change Password</h2>
+                        <p>
+                            Enter a new password to replace your current password. Password must be at least 12
+                            characters long and include 1 uppercase letter, 1 number, and 1 special character.
+                        </p>
 
-                                <div class="form-group">
-                                    <label for="account_firstname" class="form-label">First Name</label>
-                                    <input type="text" name="account_firstname" id="account_firstname"
-                                        value="<%= (typeof accountData.account_firstname !== 'undefined') ? accountData.account_firstname : '' %>"
-                                        required class="form-input" />
-                                </div>
+                        <form action="/account/update-password" method="post">
+                            <input type="hidden" name="account_id" value="<%= account_id %>">
 
-                                <div class="form-group">
-                                    <label for="account_lastname" class="form-label">First Name</label>
-                                    <input type="text" name="account_lastname" id="account_lastname"
-                                        value="<%= (typeof accountData.account_lastname !== 'undefined') ? accountData.account_lastname : '' %>"
-                                        required class="form-input" />
-                                </div>
+                            <label for="account_password">New Password</label>
+                            <input type="password" id="account_password" name="account_password" required>
 
-                                <div class="form-group">
-                                    <label for="account_email" class="form-label">Email</label>
-                                    <input type="email" name="account_email" id="account_email"
-                                        value="<%= (typeof accountData.account_email !== 'undefined') ? accountData.account_email : '' %>"
-                                        required class="form-input" />
-                                </div>
-
-                                <button type="submit" class="btn btn-primary">Update Information</button>
-                            </form>
-                        </section>
-
-                        <!-- Change Password Form -->
-                        <section class="password">
-                            <h2>Change Password</h2>
-                            <p>
-                                Enter a new password below. This will replace your current password.
-                                <br />Passwords must be at least 12 characters long and include a number,
-                                uppercase, lowercase, and special character.
-                            </p>
-                            <form method="post" action="/account/changePassword/<%= accountData.account_id %>"
-                                class="form">
-                                <div class="form-group">
-                                    <label for="account_id" class="form-label">Account ID</label>
-                                    <input type="hidden" name="account_id" value="<%= accountData.account_id %>"
-                                        class="form-input" />
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="account_password" class="form-label">New Password</label>
-                                    <input type="password" name="account_password" id="new_account_password" required
-                                        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
-                                        title="Must be at least 12 characters and include uppercase, lowercase, number, and special character."
-                                        class="form-input" />
-                                    <label class="checkbox-label">
-                                        <input type="checkbox" id="toggleNewPassword" class="checkbox-input" />
-                                        Show Password
-                                    </label>
-                                    <small class="form-hint">
-                                        Password must be at least 12 characters, include 1 uppercase letter, 1
-                                        number, and 1 special character.
-                                    </small>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary">Login</button>
-                            </form>
-                        </section>
+                            <button type="submit" class="btn">Change Password</button>
+                        </form>
+                    </div>
+</section>
