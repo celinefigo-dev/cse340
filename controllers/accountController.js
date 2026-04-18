@@ -154,6 +154,8 @@ accountController.accountLogin = async function (req, res, next) {
 
     res.cookie("jwt", accessToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
       maxAge: 60 * 60 * 1000,
     })
 
@@ -235,6 +237,8 @@ accountController.updateAccount = async function (req, res, next) {
 
       res.cookie("jwt", accessToken, {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
         maxAge: 60 * 60 * 1000,
       })
 

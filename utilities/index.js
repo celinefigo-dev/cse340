@@ -31,10 +31,10 @@ Util.buildClassificationGrid = async function (data) {
     grid += '<ul id="inv-display">'
     data.forEach((vehicle) => {
       grid += "<li>"
-      grid += `<a href="/inv/detail/${vehicle.inv_id}" title="View ${vehicle.inv_make} ${vehicle.inv_model} details"><img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on CSE Motors"></a>`
+      grid += `<a href="/inv/detail/${vehicle.inv_id}"><img src="${vehicle.inv_thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}"></a>`
       grid += '<div class="namePrice">'
       grid += "<hr>"
-      grid += `<h2><a href="/inv/detail/${vehicle.inv_id}" title="View ${vehicle.inv_make} ${vehicle.inv_model} details">${vehicle.inv_make} ${vehicle.inv_model}</a></h2>`
+      grid += `<h2><a href="/inv/detail/${vehicle.inv_id}">${vehicle.inv_make} ${vehicle.inv_model}</a></h2>`
       grid += `<span>$${new Intl.NumberFormat("en-US").format(vehicle.inv_price)}</span>`
       grid += "</div>"
       grid += "</li>"
@@ -56,7 +56,7 @@ Util.buildDetailsGrid = async function (vehicle) {
   return `
     <section class="vehicle-detail">
       <div class="vehicle-detail__image">
-        <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
+        <img src="${vehicle.inv_image}" alt="${vehicle.inv_make} ${vehicle.inv_model}">
       </div>
       <div class="vehicle-detail__info">
         <h2>${vehicle.inv_year} ${vehicle.inv_make} ${vehicle.inv_model}</h2>
@@ -99,23 +99,29 @@ Util.handleErrors = (fn) => (req, res, next) =>
  * Check JWT and set locals
  * ******************************** */
 Util.checkJWTToken = (req, res, next) => {
-  const token = req.cookies.jwt
-  if (!token) {
-    res.locals.loggedin = false
-    return next()
-  }
+  try {
+    const token = req.cookies.jwt
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
-    if (err) {
+    if (!token) {
       res.locals.loggedin = false
-      res.clearCookie("jwt")
       return next()
     }
 
-    res.locals.loggedin = true
-    res.locals.accountData = accountData
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
+      if (err) {
+        res.locals.loggedin = false
+        res.clearCookie("jwt")
+        return next()
+      }
+
+      res.locals.loggedin = true
+      res.locals.accountData = accountData
+      next()
+    })
+  } catch (error) {
+    res.locals.loggedin = false
     next()
-  })
+  }
 }
 
 /* ********************************
@@ -137,6 +143,7 @@ Util.checkEmployeeOrAdmin = (req, res, next) => {
     nav: res.locals.nav,
     errors: null,
     account_email: "",
+    notice: req.flash("notice"), // ✅ FIXED
   })
 }
 
